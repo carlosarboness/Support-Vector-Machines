@@ -1,0 +1,37 @@
+reset; 
+
+model dual_gaussian_kernel.mod;
+
+param K; 
+param nus{i in 1..K}; 
+
+data dual_gaussian.dat; 
+data test.dat; 
+
+let nu := nus[1]; 
+option solver 'C:/Users/Carlos Arbonés/Desktop/ampl_mswin64/ampl_mswin64/cplex'; 
+solve;
+
+param gamma; 
+param pred{i in 1..TEST_SIZE};
+
+for {k in 1..m}{
+		if la[k] > 1e-6 and la[k] < nu - 1e-6 then {
+			let gamma := (1/y[k]) - (sum{i in 1..m} la[i]*y[i]*exp(-sum{j in 1..n} ((A[i,j] - A[k,j])^2) / (2 * sigma^2))); 
+			break; 
+		}
+	}
+
+for {k in 1..TEST_SIZE}{
+	let pred[k] := (sum{i in 1..m} la[i]*y[i]*exp(-sum{j in 1..n} ((A[i,j] - test[k,j])^2) / (2 * sigma^2))) + gamma; 
+}
+
+
+for {i in 1..TEST_SIZE}{
+	display pred[i] > "./outputs/predictions.csv";
+} 
+
+display solve_message > "./outputs/optimal_parameters_gaussian.csv"; 
+display _solve_elapsed_time > "./outputs/optimal_parameters_gaussian.csv";  
+display gamma > "./outputs/optimal_parameters_gaussian.csv"; 
+

@@ -1,0 +1,15 @@
+solve_message = 'CPLEX 20.1.0.0: optimal solution; objective 86.52324289\
+17 QP barrier iterations\
+No basis.'
+
+_solve_elapsed_time = 1
+
+w [*] :=
+1  2.57068
+2  2.90207
+3  2.86961
+4  2.60609
+;
+
+gamma = -5.44081
+

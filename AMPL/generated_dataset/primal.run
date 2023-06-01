@@ -1,0 +1,29 @@
+reset; 
+
+model primal.mod;
+
+param K; 
+param nus{i in 1..K}; 
+
+data primal.dat;
+option solver 'C:/Users/Carlos Arbonés/Desktop/ampl_mswin64/ampl_mswin64/cplex'; 
+
+
+if (K = 1) then {
+	let nu := nus[1]; 
+	solve; 	 
+	display solve_message > "./outputs/optimal_parameters_def.csv";
+	display _solve_elapsed_time > "./outputs/optimal_parameters_def.csv";
+	display w > "./outputs/optimal_parameters_def.csv";
+	display gamma > "./outputs/optimal_parameters_def.csv"; 
+} else {
+	for {k in 1..K}{ 	
+		let nu := nus[k];  
+		solve; 
+		 
+		display solve_message > ("./outputs/optimal_parameters" & k & ".csv");
+		display _solve_elapsed_time > ("./outputs/optimal_parameters" & k & ".csv");
+		display w > ("./outputs/optimal_parameters" & k & ".csv");
+		display gamma > ("./outputs/optimal_parameters" & k & ".csv");
+	}
+}
